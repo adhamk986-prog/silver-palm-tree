@@ -1297,16 +1297,15 @@ function showResult(){
 function logResultToSheet(result){
   if(!GOOGLE_RESULTS_SCRIPT_URL) return;
   const payload = {
-    code: studentInfo.code || '',
-    name: studentInfo.name,
-    grade: studentInfo.grade,
-    subject: studentInfo.subject,
-    lesson: studentInfo.lesson,
-    percent: result.percent,
-    correctCount: result.correctCount,
-    total: result.total,
-    level: result.level,
-    academicYear: studentInfo.academicYear
+    code: result.studentCode || '',
+    name: result.studentName || '',
+    grade: result.grade || '',
+    subject: result.subject || '',
+    lesson: result.lesson || '',
+    percent: result.percent || '',
+    correctCount: result.correctCount || '',
+    total: result.total || '',
+    level: result.level || ''
   };
   fetch(GOOGLE_RESULTS_SCRIPT_URL, {
     method: 'POST',
