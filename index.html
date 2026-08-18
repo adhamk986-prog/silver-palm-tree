@@ -1280,7 +1280,17 @@ function showResult(){
   }).join('');
 
   window._resultData = { correctCount, total, percent, level, details };
-  logResultToSheet({ correctCount, total, percent, level });
+  logResultToSheet({ 
+    studentCode: studentInfo.code,
+    studentName: studentInfo.name,
+    grade: studentInfo.grade,
+    subject: studentInfo.subject,
+    lesson: studentInfo.lesson,
+    correctCount, 
+    total, 
+    percent, 
+    level 
+  });
 }
 
 // يسجّل النتيجة في شيت جوجل المشترك (إن كان مُعدًّا)، في الخلفية ودون التأثير على تجربة الطالب
