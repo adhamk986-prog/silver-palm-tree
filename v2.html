@@ -234,7 +234,8 @@
     <div class="hint">اكتب مفتاح الدولة قبل الرقم مباشرة، وشيل الصفر الأول لو موجود — مثال لعُمان: 96891234567</div>
 
     <label>الصف</label>
-    <input type="text" id="in-grade" placeholder="مثال: الصف السابع">
+    <input type="text" id="in-grade" placeholder="مثال: 5A">
+    <div class="hint">اكتب الصف بنفس الصيغة اللي بيستخدمها معلمك بالظبط (مثال: 5A أو 5B)</div>
 
     <label>المادة</label>
     <input type="text" id="in-subject" placeholder="مثال: اللغة العربية">
@@ -284,7 +285,7 @@
     </div>
 
     <label>الصف</label>
-    <input type="text" id="t-grade" placeholder="مثال: الصف السابع">
+    <input type="text" id="t-grade" placeholder="مثال: 5A">
     <label>المادة</label>
     <input type="text" id="t-subject" placeholder="مثال: اللغة العربية">
     <label>الدرس</label>
@@ -401,7 +402,10 @@ const DEFAULT_TEACHER_EMAIL = "adhamk986@gmail.com";
 function getTeacherEmail(subject, grade){
   const bySubject = TEACHER_EMAILS[subject];
   if (!bySubject) return DEFAULT_TEACHER_EMAIL;
-  return bySubject[grade] || bySubject["_افتراضي"] || DEFAULT_TEACHER_EMAIL;
+  // مطابقة الصف بدون حساسية لحالة الأحرف الإنجليزية (5a تساوي 5A)
+  const gradeNorm = (grade || '').trim().toUpperCase();
+  const matchKey = Object.keys(bySubject).find(k => k.trim().toUpperCase() === gradeNorm);
+  return (matchKey ? bySubject[matchKey] : null) || bySubject["_افتراضي"] || DEFAULT_TEACHER_EMAIL;
 }
 
 const ACADEMIC_YEAR = "2026";
@@ -721,11 +725,28 @@ function sendToParentWhatsapp(){
   // لو الرقم مكتوب من غير مفتاح دولة (أرقام عُمان محلية 8 أرقام، بدون صفر أول عادةً)، نضيف مفتاح عُمان 968
   if (digits.startsWith('0')) digits = digits.slice(1);
   if (!digits.startsWith('968') && digits.length <= 8) digits = '968' + digits;
-  const text = `نتيجة ${student.name} في مدرسة الموالح الخاصة\n` +
+  let text = `نتيجة ${student.name} في مدرسة الموالح الخاصة\n` +
     `المادة: ${student.subject} — الدرس: ${student.lesson}\n` +
     `النتيجة: ${lastResult.percent}% (${lastResult.correct} من ${lastResult.total}) — ${lastResult.level}`;
+  if (student.code){
+    const link = location.origin + location.pathname + '?code=' + encodeURIComponent(student.code);
+    text += `\n\nلمتابعة تقدم ${student.name} عبر الوقت (بالرسم البياني):\n${link}`;
+  }
   window.open('https://wa.me/' + digits + '?text=' + encodeURIComponent(text), '_blank');
 }
+
+/* لو الرابط اتفتح بكود طالب (?code=...)، نفتح شاشة التقارير مباشرة ونبحث عنه أوتوماتيك */
+(function checkReportLinkOnLoad(){
+  const params = new URLSearchParams(location.search);
+  const code = params.get('code');
+  if (code){
+    window.addEventListener('DOMContentLoaded', () => {
+      toggleReports();
+      $('rep-code').value = code;
+      loadStudentReport();
+    });
+  }
+})();
 
 /* ======================= REPORTS ======================= */
 let repChartInstance = null;
