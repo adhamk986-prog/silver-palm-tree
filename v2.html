@@ -386,11 +386,6 @@ const DEFAULT_TEACHER_EMAIL = "adhamk986@gmail.com";
 
 const ACADEMIC_YEAR = "2026";
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
-});
-if (EMAIL_CONFIGURED) emailjs.init(EMAILJS_PUBLIC_KEY);
-
 /* ======================= STATE ======================= */
 let student = {};
 let studentPhoto = null;
@@ -399,6 +394,23 @@ let answers = {};
 let lastResult = null;
 let pendingAttachment = null; // {data, name, isImage}
 let mcqOptionCount = 0;
+
+/* lazy/safe client init — if the CDN library hiccups on load, this never
+   crashes the whole script; the error only surfaces when actually needed,
+   inside a try/catch that already shows a friendly Arabic message */
+let _sb = null;
+function getSb(){
+  if (!_sb){
+    if (typeof supabase === 'undefined' || !supabase.createClient){
+      throw new Error('تعذر تحميل مكتبة الاتصال بقاعدة البيانات. تأكد من الاتصال بالإنترنت وحدّث الصفحة.');
+    }
+    _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+    });
+  }
+  return _sb;
+}
+try { if (EMAIL_CONFIGURED && typeof emailjs !== 'undefined') emailjs.init(EMAILJS_PUBLIC_KEY); } catch(e){}
 
 /* ======================= UTIL ======================= */
 function $(id){ return document.getElementById(id); }
@@ -509,7 +521,7 @@ async function startQuiz(){
   $('startBtn').innerHTML = '<span class="spin"></span> جاري التحميل...';
 
   try {
-    const { data, error } = await sb.from('questions').select('*')
+    const { data, error } = await getSb().from('questions').select('*')
       .ilike('grade', grade).ilike('subject', subject).ilike('lesson', lesson)
       .order('created_at', { ascending: true });
     if (error) throw error;
@@ -639,7 +651,7 @@ async function sendResult(){
 
   let dbOk = false, mailOk = !EMAIL_CONFIGURED;
   try {
-    const { error } = await sb.from('results').insert(row);
+    const { error } = await getSb().from('results').insert(row);
     if (error) throw error;
     dbOk = true;
   } catch(e){
@@ -699,7 +711,7 @@ async function loadStudentReport(){
     return;
   }
   try {
-    const { data, error } = await sb.from('results').select('*').eq('code', code).order('created_at', { ascending: true });
+    const { data, error } = await getSb().from('results').select('*').eq('code', code).order('created_at', { ascending: true });
     if (error) throw error;
     if (!data || data.length === 0){
       $('repMsg').innerHTML = '<div class="hint">لا توجد نتائج مسجلة لهذا الكود.</div>';
@@ -815,7 +827,7 @@ async function addQuestion(){
   $('addQBtn').disabled = true;
   $('addQBtn').innerHTML = '<span class="spin"></span> جاري الإضافة...';
   try {
-    const { error } = await sb.from('questions').insert(row);
+    const { error } = await getSb().from('questions').insert(row);
     if (error) throw error;
     $('teacherMsg').innerHTML = '<div class="msg ok2">تمت إضافة السؤال ✅</div>';
     $('t-qtext').value = '';
@@ -838,7 +850,7 @@ async function loadTeacherList(){
   const box = $('teacherList');
   box.innerHTML = 'جاري التحميل...';
   try {
-    let q = sb.from('questions').select('*').order('created_at', { ascending: false });
+    let q = getSb().from('questions').select('*').order('created_at', { ascending: false });
     if (grade) q = q.ilike('grade', grade);
     if (subject) q = q.ilike('subject', subject);
     const { data, error } = await q;
@@ -860,7 +872,7 @@ async function loadTeacherList(){
 async function deleteQuestion(id){
   if (!confirm('حذف هذا السؤال؟')) return;
   try {
-    const { error } = await sb.from('questions').delete().eq('id', id);
+    const { error } = await getSb().from('questions').delete().eq('id', id);
     if (error) throw error;
     loadTeacherList();
   } catch(e){ alert('تعذر الحذف: ' + (e.message||'')); }
@@ -869,7 +881,7 @@ async function deleteQuestion(id){
 async function deleteAllQuestions(){
   if (!confirm('هل أنت متأكد من حذف كل الأسئلة في كل الصفوف؟ لا يمكن التراجع.')) return;
   try {
-    const { error } = await sb.from('questions').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    const { error } = await getSb().from('questions').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     if (error) throw error;
     loadTeacherList();
   } catch(e){ alert('تعذر الحذف: ' + (e.message||'')); }
