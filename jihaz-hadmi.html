@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>الجهاز الهضمي | عيادة الخبير الصغير</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-0:#0E2321;
+  --bg-1:#123430;
+  --bg-2:#164A42;
+  --panel:#153A35;
+  --panel-2:#1C4B44;
+  --coral:#FF6F5E;
+  --gold:#F2B84B;
+  --mint:#5FE3C0;
+  --navy:#1F2A44;
+  --ink:#F3FBF8;
+  --ink-dim:#B9D8D0;
+  --ok:#4FE1A0;
+  --bad:#FF6B7A;
+  --radius:22px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:
+    radial-gradient(1100px 560px at 12% -8%, #1C5A50 0%, transparent 60%),
+    radial-gradient(900px 520px at 105% 8%, #2A3E63 0%, transparent 55%),
+    linear-gradient(180deg,var(--bg-0),var(--bg-1) 40%,var(--bg-2));
+  color:var(--ink);
+  font-family:'Tajawal',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+h1,h2,h3,.display{font-family:'Baloo Bhaijaan 2',sans-serif;}
+::selection{background:var(--coral);color:#2A0A06}
+
+.navdots{position:fixed;top:50%;left:14px;transform:translateY(-50%);z-index:50;display:flex;flex-direction:column;gap:10px}
+.navdots a{width:10px;height:10px;border-radius:50%;background:#3E6B62;display:block;transition:.25s}
+.navdots a.active{background:var(--mint);box-shadow:0 0 0 4px rgba(95,227,192,.2)}
+@media (max-width:720px){.navdots{display:none}}
+
+.topnav{display:none;position:sticky;top:0;z-index:60;background:rgba(14,35,33,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,.1);overflow-x:auto;white-space:nowrap;padding:10px 14px;-webkit-overflow-scrolling:touch}
+.topnav::-webkit-scrollbar{display:none}
+.topnav a{display:inline-block;color:var(--ink-dim);text-decoration:none;font-weight:700;font-size:.82rem;padding:8px 14px;border-radius:999px;margin-left:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);transition:.2s}
+.topnav a.active{color:var(--bg-0);background:var(--mint);border-color:var(--mint)}
+@media (max-width:720px){.topnav{display:block}}
+
+.wrap{max-width:920px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+section{padding:60px 0;position:relative;z-index:1;scroll-margin-top:64px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:.8rem;letter-spacing:.5px;color:var(--mint);background:rgba(95,227,192,.1);border:1px solid rgba(95,227,192,.35);padding:6px 14px;border-radius:999px;margin-bottom:14px}
+.title-xl{font-size:clamp(2rem,6vw,3.2rem);font-weight:800;line-height:1.15;margin:0 0 14px}
+.title-md{font-size:clamp(1.5rem,4vw,2rem);font-weight:700;margin:0 0 10px}
+.lead{color:var(--ink-dim);font-size:1.06rem;line-height:1.9;max-width:640px}
+
+.btn{display:inline-flex;align-items:center;gap:8px;justify-content:center;font-family:'Tajawal';font-weight:700;font-size:1rem;padding:14px 26px;border-radius:16px;border:none;cursor:pointer;transition:.15s;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.96)}
+.btn-primary{background:linear-gradient(135deg,var(--coral),#E8543F);color:#2A0A06;box-shadow:0 10px 24px -8px rgba(255,111,94,.55)}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--ink);border:1.5px solid rgba(255,255,255,.18)}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#E09A2E);color:#3A2400;box-shadow:0 10px 24px -8px rgba(242,184,75,.5)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn-sound{width:46px;height:46px;border-radius:50%;padding:0;flex:0 0 46px}
+
+/* ===== hero + mascot ===== */
+.hero{padding-top:50px;text-align:center;display:flex;flex-direction:column;align-items:center}
+.doc-stage{width:150px;height:190px;margin:6px auto 18px;position:relative;animation:float 3.8s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.doc-head{width:88px;height:96px;background:linear-gradient(160deg,#E7B98C,#CE9A6B);border-radius:44% 44% 42% 42%/50% 50% 40% 40%;margin:0 auto;position:relative;box-shadow:0 12px 22px -10px rgba(0,0,0,.5)}
+.doc-mustache{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);width:36px;height:9px;background:#2B2118;border-radius:0 0 10px 10px}
+.doc-mustache::before,.doc-mustache::after{content:'';position:absolute;top:-2px;width:14px;height:8px;background:#2B2118;border-radius:50%}
+.doc-mustache::before{left:-8px}
+.doc-mustache::after{right:-8px}
+.doc-eye{position:absolute;top:38px;width:7px;height:7px;border-radius:50%;background:#2B2118}
+.doc-eye.l{left:26px}.doc-eye.r{right:26px}
+.doc-brow{position:absolute;top:30px;width:16px;height:3px;background:#2B2118;border-radius:3px}
+.doc-brow.l{left:20px;transform:rotate(-8deg)}
+.doc-brow.r{right:20px;transform:rotate(8deg)}
+.doc-body{width:118px;height:78px;background:linear-gradient(160deg,#1F2A44,#141C33);border-radius:24px 24px 30px 30px;margin:-6px auto 0;box-shadow:0 14px 26px -10px rgba(0,0,0,.5);position:relative}
+.doc-shirt{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:34px;height:44px;background:#F3FBF8;clip-path:polygon(20% 0,80% 0,100% 100%,0 100%)}
+.doc-tie{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:10px;height:40px;background:linear-gradient(180deg,var(--coral),var(--gold));clip-path:polygon(20% 0,80% 0,100% 20%,50% 100%,0 20%)}
+.doc-badge{position:absolute;top:14px;left:14px;width:14px;height:14px;border-radius:50%;background:var(--mint);box-shadow:0 0 8px 2px rgba(95,227,192,.7)}
+.speech{background:var(--panel);border:1.5px solid rgba(255,255,255,.12);border-radius:18px 18px 18px 4px;padding:16px 20px;max-width:440px;margin:0 auto;font-weight:500;line-height:1.85;box-shadow:0 16px 30px -18px rgba(0,0,0,.6)}
+.hero-actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;justify-content:center}
+
+.panel{background:linear-gradient(160deg,var(--panel),var(--panel-2));border:1px solid rgba(255,255,255,.08);border-radius:var(--radius);padding:26px;box-shadow:0 20px 40px -24px rgba(0,0,0,.7)}
+
+/* ===== path diagram ===== */
+.path-flow{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;margin-top:20px}
+.path-node{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.16);padding:10px 16px;border-radius:14px;font-weight:700;font-size:.95rem}
+.path-node.hi{background:rgba(255,111,94,.16);border-color:var(--coral);color:var(--coral)}
+.path-arrow{color:var(--ink-dim);font-size:1.1rem}
+
+/* ===== flip cards ===== */
+.cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:10px}
+@media (max-width:760px){.cards-grid{grid-template-columns:1fr}}
+.flip-card{perspective:1200px;height:220px;cursor:pointer}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;padding:20px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center}
+.flip-front{background:linear-gradient(150deg,var(--panel-2),#20574F);border:1.5px solid rgba(255,255,255,.12)}
+.flip-front .num{font-family:'Baloo Bhaijaan 2';font-size:2.4rem;color:var(--mint);font-weight:800}
+.flip-back{background:linear-gradient(150deg,#7A2C1F,#5C1F16);transform:rotateY(180deg);border:1.5px solid rgba(255,111,94,.45);font-size:.92rem;line-height:1.75}
+.flip-hint{position:absolute;bottom:10px;font-size:.7rem;color:var(--ink-dim)}
+
+/* ===== organ chips ===== */
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;justify-content:center}
+.chip{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.15);padding:10px 18px;border-radius:999px;font-weight:700;font-size:.95rem}
+
+/* ===== game ===== */
+.game-hud{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+.hud-pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:8px 16px;font-weight:700;font-size:.85rem}
+.progress-track{height:10px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-top:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--mint),var(--gold));width:0%;transition:width .4s}
+.game-instruction{text-align:center;color:var(--ink-dim);font-weight:700;margin:10px 0}
+.organ-pool{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0}
+.organ-chip{padding:12px 18px;border-radius:14px;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.18);cursor:pointer;font-weight:700;transition:.15s}
+.organ-chip:hover{border-color:var(--mint)}
+.organ-chip.used{opacity:.25;pointer-events:none}
+.order-track{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;min-height:54px;padding:12px;border-radius:14px;border:1.5px dashed rgba(255,255,255,.25);margin-bottom:6px}
+.order-slot{padding:10px 16px;border-radius:12px;background:rgba(95,227,192,.16);border:1.5px solid var(--mint);color:var(--mint);font-weight:800}
+.feedback-box{margin-top:16px;padding:14px 18px;border-radius:14px;font-weight:700;text-align:center;display:none}
+.feedback-box.show{display:block}
+.feedback-box.ok{background:rgba(79,225,160,.15);border:1.5px solid var(--ok);color:var(--ok)}
+.feedback-box.bad{background:rgba(255,107,122,.15);border:1.5px solid var(--bad);color:var(--bad)}
+
+/* ===== badges ===== */
+.badges-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}
+@media (max-width:640px){.badges-grid{grid-template-columns:1fr}}
+.badge{padding:22px 14px;border-radius:18px;text-align:center;background:rgba(255,255,255,.04);border:1.5px dashed rgba(255,255,255,.2);transition:.3s}
+.badge.unlocked{background:linear-gradient(160deg,#20574F,#123430);border:1.5px solid var(--gold);box-shadow:0 14px 26px -14px rgba(242,184,75,.5)}
+.badge-icon{font-size:2.4rem;display:block;margin-bottom:8px;filter:grayscale(1);opacity:.4}
+.badge.unlocked .badge-icon{filter:none;opacity:1}
+.badge-name{font-weight:800}
+.badge-desc{font-size:.78rem;color:var(--ink-dim);margin-top:4px}
+
+/* ===== quiz ===== */
+.quiz-card{margin-bottom:16px}
+.q-num{color:var(--mint);font-weight:800;font-size:.85rem;margin-bottom:6px}
+.q-text{font-weight:700;font-size:1.08rem;margin-bottom:14px;line-height:1.8}
+.opts{display:grid;gap:10px}
+.opt{padding:13px 16px;border-radius:13px;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.14);cursor:pointer;font-weight:600;transition:.15s}
+.opt:hover{border-color:rgba(255,255,255,.35)}
+.opt.correct{background:rgba(79,225,160,.18);border-color:var(--ok)}
+.opt.wrong{background:rgba(255,107,122,.18);border-color:var(--bad)}
+.opt.disabled{pointer-events:none}
+
+/* ===== result ===== */
+.result-ring{width:170px;height:170px;border-radius:50%;margin:10px auto 20px;display:flex;align-items:center;justify-content:center;position:relative;background:conic-gradient(var(--mint) calc(var(--pct,0)*1%), rgba(255,255,255,.08) 0)}
+.result-ring::before{content:'';position:absolute;inset:12px;border-radius:50%;background:var(--bg-1)}
+.result-ring span{position:relative;font-family:'Baloo Bhaijaan 2';font-size:2.2rem;font-weight:800;color:var(--mint)}
+
+/* ===== certificate ===== */
+.cert-input{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:22px}
+.cert-input input{flex:1;min-width:220px;padding:14px 18px;border-radius:14px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:var(--ink);font-family:'Tajawal';font-size:1rem}
+.cert-input input:focus{outline:2px solid var(--mint)}
+.certificate{background:linear-gradient(160deg,#FBF6E9,#F2E7C9);color:#2A1B00;border-radius:20px;padding:40px 30px;text-align:center;border:6px double #B8862F;position:relative;max-width:640px;margin:0 auto}
+.certificate .stamp{position:absolute;bottom:26px;left:30px;width:74px;height:74px;border-radius:50%;border:3px solid #B8862F;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.62rem;color:#B8862F;transform:rotate(-14deg)}
+.certificate h2{font-family:'Baloo Bhaijaan 2';font-size:1.4rem;margin:2px 0;color:#7A4E00}
+.cert-name{font-family:'Baloo Bhaijaan 2';font-size:2.1rem;color:#3A2400;margin:14px 0;border-bottom:2px solid #B8862F;display:inline-block;padding:0 20px 6px}
+.cert-badges-row{display:flex;justify-content:center;gap:16px;margin:18px 0;font-size:1.6rem}
+.cert-date{font-size:.85rem;color:#5C4200;margin-top:14px}
+
+footer{text-align:center;padding:40px 20px 70px;color:var(--ink-dim);font-size:.85rem}
+
+@media print{
+  body *{visibility:hidden}
+  .navdots,.hero-actions,.btn{visibility:hidden!important}
+  #certificate-print, #certificate-print *{visibility:visible}
+  #certificate-print{position:absolute;top:0;left:0;width:100%}
+}
+</style>
+</head>
+<body>
+
+<nav class="navdots" id="navdots">
+  <a href="#hero" class="dot"></a>
+  <a href="#rule" class="dot"></a>
+  <a href="#cards" class="dot"></a>
+  <a href="#game" class="dot"></a>
+  <a href="#badges" class="dot"></a>
+  <a href="#quiz" class="dot"></a>
+  <a href="#result" class="dot"></a>
+</nav>
+
+<nav class="topnav" id="topnav">
+  <a href="#hero" class="tlink">🩺 البداية</a>
+  <a href="#rule" class="tlink">📖 الفكرة</a>
+  <a href="#cards" class="tlink">🗂️ البطاقات</a>
+  <a href="#game" class="tlink">🧩 اللعبة</a>
+  <a href="#badges" class="tlink">🏅 الأوسمة</a>
+  <a href="#quiz" class="tlink">🧠 الاختبار</a>
+  <a href="#result" class="tlink">🎓 الشهادة</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="hero">
+    <span class="eyebrow">🩺 علوم — الصف السابع</span>
+    <div class="doc-stage">
+      <div class="doc-head">
+        <div class="doc-brow l"></div><div class="doc-brow r"></div>
+        <div class="doc-eye l"></div><div class="doc-eye r"></div>
+        <div class="doc-mustache"></div>
+      </div>
+      <div class="doc-body">
+        <div class="doc-shirt"></div>
+        <div class="doc-tie"></div>
+        <div class="doc-badge"></div>
+      </div>
+    </div>
+    <h1 class="title-xl">الجهاز الهضمي</h1>
+    <div class="speech" id="heroSpeech">
+      أهلاً بك، أنا "الدكتور وقّار" 🎩، خبيرك في رحلة الطعام داخل الجسم.<br>
+      اليوم سنتتبع معاً مسار الطعام من أول لقمة حتى نهاية الرحلة. هل أنت مستعد؟
+    </div>
+    <div class="hero-actions">
+      <button class="btn btn-sound" onclick="speak(document.getElementById('heroSpeech').innerText)">🔊</button>
+      <a href="#rule" class="btn btn-primary">ابدأ الجولة 🔬</a>
+    </div>
+  </section>
+
+  <!-- ============ RULE / PATH ============ -->
+  <section id="rule">
+    <span class="eyebrow">01 · الفكرة العامة</span>
+    <h2 class="title-md">ما هو الجهاز الهضمي؟</h2>
+    <p class="lead">الجهاز الهضمي مجموعة من الأعضاء تعمل معاً لتفتيت الطعام إلى مواد صغيرة يمتصها الجسم ويستخدمها للطاقة والنمو، ثم تتخلص من الفضلات غير المستفاد منها.</p>
+
+    <div class="panel">
+      <h3 style="margin-top:0;text-align:center">رحلة الطعام داخل الجسم</h3>
+      <div class="path-flow">
+        <span class="path-node hi">الفم</span><span class="path-arrow">←</span>
+        <span class="path-node">البلعوم</span><span class="path-arrow">←</span>
+        <span class="path-node">المريء</span><span class="path-arrow">←</span>
+        <span class="path-node hi">المعدة</span><span class="path-arrow">←</span>
+        <span class="path-node hi">الأمعاء الدقيقة</span><span class="path-arrow">←</span>
+        <span class="path-node">الأمعاء الغليظة</span><span class="path-arrow">←</span>
+        <span class="path-node">فتحة الشرج</span>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:14px" onclick="speak('الجهاز الهضمي مجموعة من الأعضاء تعمل معاً. تبدأ الرحلة في الفم حيث يُمضغ الطعام ويختلط باللعاب، ثم يمر عبر البلعوم والمريء إلى المعدة، حيث تفرز عصارات حمضية تهضم البروتينات. بعدها ينتقل الطعام إلى الأمعاء الدقيقة، حيث يحدث معظم الامتصاص بمساعدة الكبد والبنكرياس، ثم إلى الأمعاء الغليظة حيث يُمتص الماء، لتخرج الفضلات في النهاية.')">🔊 استمع لرحلة الطعام</button>
+    </div>
+
+    <div class="panel" style="margin-top:20px">
+      <h3 style="margin-top:0">الأعضاء المساعدة في الهضم</h3>
+      <div class="chips">
+        <span class="chip">🧪 الكبد — ينتج الصفراء لهضم الدهون</span>
+        <span class="chip">🧫 البنكرياس — يفرز إنزيمات هاضمة والأنسولين</span>
+        <span class="chip">💧 المرارة — تخزّن الصفراء</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONCEPT CARDS ============ -->
+  <section id="cards">
+    <span class="eyebrow">02 · بطاقات المفاهيم</span>
+    <h2 class="title-md">اضغط على كل بطاقة لتكتشف المعلومة ✨</h2>
+    <div class="cards-grid">
+
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <span class="num">١</span>
+            <h3>الجهاز الهضمي</h3>
+            <span class="flip-hint">اضغط لتقلب البطاقة</span>
+          </div>
+          <div class="flip-face flip-back">
+            مجموعة أعضاء متصلة (من الفم إلى فتحة الشرج) بالإضافة إلى الكبد والبنكرياس، تعمل معاً لتحويل الطعام إلى طاقة وبناء للجسم.
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <span class="num">٢</span>
+            <h3>الفم والأمعاء</h3>
+            <span class="flip-hint">اضغط لتقلب البطاقة</span>
+          </div>
+          <div class="flip-face flip-back">
+            في الفم يبدأ الهضم الميكانيكي بالمضغ واللعاب. في الأمعاء الدقيقة تحدث معظم عمليات الامتصاص عبر تراكيب صغيرة تسمى الزغابات.
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card" onclick="this.classList.toggle('flipped')">
+        <div class="flip-inner">
+          <div class="flip-face flip-front">
+            <span class="num">٣</span>
+            <h3>المعدة والكبد والبنكرياس</h3>
+            <span class="flip-hint">اضغط لتقلب البطاقة</span>
+          </div>
+          <div class="flip-face flip-back">
+            المعدة تفرز عصارة حمضية تهضم البروتينات، الكبد ينتج الصفراء لهضم الدهون، والبنكرياس يفرز إنزيمات هاضمة وهرمون الأنسولين المنظّم للسكر.
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div style="text-align:center;margin-top:26px">
+      <a href="#game" class="btn btn-primary" onclick="unlockBadge('explorer')">التالي: مهمة الترتيب 🧩</a>
+    </div>
+  </section>
+
+  <!-- ============ GAME ============ -->
+  <section id="game">
+    <span class="eyebrow">03 · معمل الترتيب</span>
+    <h2 class="title-md">مهمة: رتّب مسار الطعام بالترتيب الصحيح 🍎</h2>
+    <p class="lead">اضغط على الأعضاء بالترتيب الذي يمر به الطعام داخل الجسم، من البداية إلى النهاية.</p>
+
+    <div class="panel">
+      <div class="game-hud">
+        <span class="hud-pill">🧩 المحاولة <span id="roundNo">1</span></span>
+        <span class="hud-pill">⭐ النقاط: <span id="gameScore">0</span></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="gameProgress"></div></div>
+
+      <p class="game-instruction">ترتيبك حتى الآن:</p>
+      <div class="order-track" id="orderTrack"></div>
+
+      <div class="organ-pool" id="organPool"></div>
+
+      <div class="feedback-box" id="gameFeedback"></div>
+
+      <div style="text-align:center;margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="resetGame()">إعادة المحاولة 🔄</button>
+        <button class="btn btn-primary" id="checkBtn" onclick="checkOrder()">تحقق من الترتيب ✅</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BADGES ============ -->
+  <section id="badges">
+    <span class="eyebrow">04 · لوحة الأوسمة</span>
+    <h2 class="title-md">أوسمتك حتى الآن</h2>
+    <div class="badges-grid">
+      <div class="badge" id="badge-explorer">
+        <span class="badge-icon">🧭</span>
+        <div class="badge-name">المستكشف</div>
+        <div class="badge-desc">اكتشفت بطاقات المفاهيم الثلاث</div>
+      </div>
+      <div class="badge" id="badge-commander">
+        <span class="badge-icon">🧩</span>
+        <div class="badge-name">مرتّب الأعضاء</div>
+        <div class="badge-desc">رتّبت مسار الطعام بشكل صحيح</div>
+      </div>
+      <div class="badge" id="badge-expert">
+        <span class="badge-icon">🏆</span>
+        <div class="badge-name">خبير الجهاز الهضمي</div>
+        <div class="badge-desc">حققت 80% فأكثر في الاختبار الختامي</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ QUIZ ============ -->
+  <section id="quiz">
+    <span class="eyebrow">05 · الاختبار الختامي</span>
+    <h2 class="title-md">10 أسئلة لإثبات أنك خبير حقيقي 🧠</h2>
+    <div id="quizContainer"></div>
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn btn-primary" id="submitQuizBtn" onclick="submitQuiz()">إنهاء الاختبار وعرض النتيجة</button>
+    </div>
+  </section>
+
+  <!-- ============ RESULT + CERTIFICATE ============ -->
+  <section id="result">
+    <span class="eyebrow">06 · النتيجة والشهادة</span>
+    <h2 class="title-md">نتيجتك</h2>
+    <div class="panel" style="text-align:center">
+      <div class="result-ring" id="resultRing"><span id="resultPct">0%</span></div>
+      <p id="resultMsg" class="lead" style="margin:0 auto">أكمل الاختبار الختامي أولاً لتظهر نتيجتك هنا.</p>
+    </div>
+
+    <div class="panel" style="margin-top:22px">
+      <h3 style="margin-top:0;text-align:center">🎓 شهادتك الجاهزة للطباعة</h3>
+      <div class="cert-input">
+        <input type="text" id="studentName" placeholder="اكتب اسمك هنا لطباعة الشهادة">
+        <button class="btn btn-gold" onclick="renderCertificate()">إنشاء الشهادة</button>
+      </div>
+
+      <div id="certificate-print">
+        <div class="certificate" id="certificateBox" style="display:none">
+          <h2>عيادة الخبير الصغير — شهادة إنجاز</h2>
+          <p style="margin:2px 0;color:#5C4200">تشهد هذه الوثيقة بأن الطالب/ـة</p>
+          <div class="cert-name" id="certName">— — —</div>
+          <p style="margin:6px 0 0;color:#3A2400;font-weight:700">قد أتم/ت بنجاح درس «الجهاز الهضمي» لمادة العلوم — الصف السابع</p>
+          <p style="margin:6px 0;color:#5C4200">بنتيجة نهائية <span id="certScore" style="font-weight:900;color:#7A4E00">0%</span></p>
+          <div class="cert-badges-row" id="certBadgesRow"></div>
+          <div class="cert-date" id="certDate"></div>
+          <div class="stamp">عيادة<br>العلوم</div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:16px">
+        <button class="btn btn-ghost" id="printBtn" style="display:none" onclick="window.print()">🖨️ طباعة الشهادة</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    عيادة الخبير الصغير 🩺 — درس «الجهاز الهضمي» · علوم · الصف السابع
+  </footer>
+</div>
+
+<script>
+/* ---------- nav dots + top nav ---------- */
+const dotSections=['hero','rule','cards','game','badges','quiz','result'];
+const dots=document.querySelectorAll('.navdots a');
+const tlinks=document.querySelectorAll('.topnav a');
+window.addEventListener('scroll',()=>{
+  let cur=dotSections[0];
+  dotSections.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && window.scrollY+140>=el.offsetTop) cur=id;
+  });
+  dots.forEach(d=>d.classList.toggle('active', d.getAttribute('href')==='#'+cur));
+  tlinks.forEach(t=>t.classList.toggle('active', t.getAttribute('href')==='#'+cur));
+});
+
+/* ---------- speech ---------- */
+function speak(text){
+  if(!('speechSynthesis' in window)){alert('المتصفح لا يدعم النطق الصوتي.');return;}
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  const voices=window.speechSynthesis.getVoices();
+  const arVoice=voices.find(v=>v.lang && v.lang.startsWith('ar'));
+  if(arVoice) u.voice=arVoice;
+  u.lang='ar-SA'; u.rate=0.92;
+  window.speechSynthesis.speak(u);
+}
+
+/* ---------- badges ---------- */
+const BADGES=['explorer','commander','expert'];
+function loadBadges(){
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem('jihaz_badges')||'{}');}catch(e){}
+  BADGES.forEach(b=>{ if(saved[b]) document.getElementById('badge-'+b).classList.add('unlocked'); });
+}
+function unlockBadge(name){
+  const el=document.getElementById('badge-'+name);
+  if(!el || el.classList.contains('unlocked')) return;
+  el.classList.add('unlocked');
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem('jihaz_badges')||'{}');}catch(e){}
+  saved[name]=true;
+  localStorage.setItem('jihaz_badges',JSON.stringify(saved));
+}
+loadBadges();
+
+/* ---------- GAME: order the organs ---------- */
+const correctOrder=['الفم','البلعوم','المريء','المعدة','الأمعاء الدقيقة','الأمعاء الغليظة','فتحة الشرج'];
+let poolOrder=[], userOrder=[], attempts=1;
+
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function renderGame(){
+  poolOrder=shuffle(correctOrder);
+  userOrder=[];
+  document.getElementById('roundNo').innerText=attempts;
+  document.getElementById('gameFeedback').className='feedback-box';
+  document.getElementById('gameProgress').style.width='0%';
+  renderOrderTrack();
+  const pool=document.getElementById('organPool');
+  pool.innerHTML='';
+  poolOrder.forEach(name=>{
+    const chip=document.createElement('div');
+    chip.className='organ-chip';
+    chip.textContent=name;
+    chip.onclick=()=>pickOrgan(name,chip);
+    pool.appendChild(chip);
+  });
+}
+
+function pickOrgan(name, chipEl){
+  if(chipEl.classList.contains('used')) return;
+  chipEl.classList.add('used');
+  userOrder.push(name);
+  renderOrderTrack();
+  document.getElementById('gameProgress').style.width = Math.round((userOrder.length/correctOrder.length)*100)+'%';
+}
+
+function renderOrderTrack(){
+  const track=document.getElementById('orderTrack');
+  track.innerHTML='';
+  if(userOrder.length===0){
+    track.innerHTML='<span style="color:var(--ink-dim);font-size:.85rem">اضغط على الأعضاء بالأسفل بالترتيب الصحيح...</span>';
+    return;
+  }
+  userOrder.forEach((n,i)=>{
+    const slot=document.createElement('span');
+    slot.className='order-slot';
+    slot.textContent=(i+1)+'. '+n;
+    track.appendChild(slot);
+  });
+}
+
+function checkOrder(){
+  if(userOrder.length<correctOrder.length){
+    showGameFeedback(false,'أكمل ترتيب جميع الأعضاء السبعة أولاً!');
+    return;
+  }
+  const isCorrect = userOrder.every((v,i)=>v===correctOrder[i]);
+  if(isCorrect){
+    showGameFeedback(true,'🎉 رائع! هذا هو المسار الصحيح تماماً لرحلة الطعام.');
+    document.getElementById('gameScore').innerText = parseInt(document.getElementById('gameScore').innerText)+20;
+    unlockBadge('commander');
+    speak('عمل ممتاز! رتبت مسار الجهاز الهضمي بشكل صحيح، وحصلت على وسام مرتب الأعضاء.');
+  } else {
+    showGameFeedback(false,'ترتيب غير صحيح تماماً، حاول مرة أخرى وتذكّر: الفم أولاً والشرج أخيراً!');
+    attempts++;
+  }
+}
+function resetGame(){ renderGame(); }
+function showGameFeedback(ok,msg){
+  const box=document.getElementById('gameFeedback');
+  box.textContent=msg;
+  box.className='feedback-box show '+(ok?'ok':'bad');
+}
+renderGame();
+
+/* ---------- QUIZ ---------- */
+const quizData=[
+  {q:'ما الوظيفة الأساسية للجهاز الهضمي؟', opts:['ضخ الدم في الجسم','تفتيت الطعام وامتصاص العناصر المفيدة منه','تبادل الغازات','إنتاج الحرارة فقط'], correct:1},
+  {q:'أين يبدأ الهضم الميكانيكي للطعام؟', opts:['المعدة','الأمعاء الدقيقة','الفم','المريء'], correct:2},
+  {q:'ما وظيفة المعدة؟', opts:['امتصاص الماء فقط','إفراز عصارة حمضية لهضم البروتينات','إنتاج الصفراء','تخزين الفضلات'], correct:1},
+  {q:'أي عضو ينتج الصفراء لهضم الدهون؟', opts:['البنكرياس','الكبد','المرارة','المعدة'], correct:1},
+  {q:'ما وظيفة المرارة؟', opts:['إنتاج الصفراء','تخزين الصفراء القادمة من الكبد','هضم البروتينات','امتصاص الماء'], correct:1},
+  {q:'ماذا يفرز البنكرياس بالإضافة إلى الإنزيمات الهاضمة؟', opts:['الصفراء','هرمون الأنسولين','حمض المعدة','اللعاب'], correct:1},
+  {q:'أين يحدث معظم امتصاص العناصر الغذائية؟', opts:['المعدة','الأمعاء الغليظة','الأمعاء الدقيقة','المريء'], correct:2},
+  {q:'ما وظيفة الزغابات المعوية؟', opts:['طحن الطعام','زيادة مساحة سطح الامتصاص في الأمعاء الدقيقة','إفراز الصفراء','تخزين الفضلات'], correct:1},
+  {q:'ما الترتيب الصحيح لمسار الطعام بعد المعدة؟', opts:['الأمعاء الغليظة ثم الدقيقة','الأمعاء الدقيقة ثم الغليظة','المريء ثم البلعوم','البنكرياس ثم الكبد'], correct:1},
+  {q:'ما الوظيفة الرئيسية للأمعاء الغليظة؟', opts:['هضم البروتينات','امتصاص الماء من الفضلات المتبقية','إنتاج الإنزيمات','إفراز الأنسولين'], correct:1},
+];
+let userAnswers=new Array(quizData.length).fill(null);
+
+function renderQuiz(){
+  const c=document.getElementById('quizContainer');
+  c.innerHTML='';
+  quizData.forEach((item,qi)=>{
+    const card=document.createElement('div');
+    card.className='panel quiz-card';
+    card.innerHTML = `
+      <div class="q-num">السؤال ${qi+1} من ${quizData.length}</div>
+      <div class="q-text">${item.q}</div>
+      <div class="opts" id="opts-${qi}"></div>
+    `;
+    c.appendChild(card);
+    const optsBox=card.querySelector('#opts-'+qi);
+    item.opts.forEach((optText,oi)=>{
+      const opt=document.createElement('div');
+      opt.className='opt';
+      opt.textContent=optText;
+      opt.onclick=()=>selectOption(qi,oi);
+      optsBox.appendChild(opt);
+    });
+  });
+}
+function selectOption(qi,oi){
+  if(userAnswers[qi]!==null) return;
+  userAnswers[qi]=oi;
+  const optsBox=document.getElementById('opts-'+qi);
+  const opts=optsBox.querySelectorAll('.opt');
+  opts.forEach((el,idx)=>{
+    el.classList.add('disabled');
+    if(idx===quizData[qi].correct) el.classList.add('correct');
+    else if(idx===oi) el.classList.add('wrong');
+  });
+}
+renderQuiz();
+
+function submitQuiz(){
+  const unanswered=userAnswers.findIndex(a=>a===null);
+  if(unanswered!==-1){
+    alert('من فضلك أجب عن جميع الأسئلة قبل الإنهاء (السؤال '+(unanswered+1)+' لم يُجب بعد).');
+    document.getElementById('quiz').scrollIntoView({behavior:'smooth'});
+    return;
+  }
+  let correctCount=0;
+  userAnswers.forEach((a,i)=>{ if(a===quizData[i].correct) correctCount++; });
+  const pct=Math.round((correctCount/quizData.length)*100);
+  document.getElementById('resultRing').style.setProperty('--pct',pct);
+  document.getElementById('resultPct').innerText=pct+'%';
+  window.lastScorePct=pct;
+
+  let msg='';
+  if(pct>=80){ msg='🏆 أداء رائع! أنت الآن خبير حقيقي في الجهاز الهضمي.'; unlockBadge('expert'); speak('مبروك! لقد حصلت على وسام خبير الجهاز الهضمي.'); }
+  else if(pct>=50){ msg='👍 عمل جيد! راجع البطاقات مرة أخرى لتصبح خبيراً.'; }
+  else { msg='💪 لا بأس، عد إلى بطاقات المفاهيم وأعد المحاولة لتتقن الدرس.'; }
+  msg+=` (${correctCount} من ${quizData.length} إجابات صحيحة)`;
+  document.getElementById('resultMsg').innerText=msg;
+  document.getElementById('submitQuizBtn').disabled=true;
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+/* ---------- certificate ---------- */
+function renderCertificate(){
+  const name=document.getElementById('studentName').value.trim();
+  if(!name){ alert('اكتب اسمك أولاً لإنشاء الشهادة.'); return; }
+  const pct = typeof window.lastScorePct==='number' ? window.lastScorePct : 0;
+  document.getElementById('certName').innerText=name;
+  document.getElementById('certScore').innerText=pct+'%';
+
+  const badgeIcons={explorer:'🧭',commander:'🧩',expert:'🏆'};
+  let saved={};
+  try{saved=JSON.parse(localStorage.getItem('jihaz_badges')||'{}');}catch(e){}
+  const row=Object.keys(badgeIcons).filter(k=>saved[k]).map(k=>badgeIcons[k]).join(' ');
+  document.getElementById('certBadgesRow').innerText = row || '—';
+
+  const d=new Date();
+  document.getElementById('certDate').innerText = 'تاريخ الإصدار: '+d.toLocaleDateString('ar-EG');
+
+  document.getElementById('certificateBox').style.display='block';
+  document.getElementById('printBtn').style.display='inline-flex';
+}
+</script>
+</body>
+</html>
