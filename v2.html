@@ -408,36 +408,35 @@ const SUPABASE_URL = "https://zhwlcjaxitsninqqhwak.supabase.co";
 const SUPABASE_KEY = "sb_publishable_uwiwPdiz3yRPG_3uwQEmNA_QTXKwHlK";
 
 // اختياري: إرسال إيميل تلقائي للمعلم عند كل نتيجة (emailjs.com)
-// خطوات الإعداد:
-// 1) سجّل حساب مجاني على emailjs.com
-// 2) Email Services > أضف خدمة (Gmail مثلًا) واربطها بحسابك
-// 3) Email Templates > أنشئ قالب، وفي حقل "To Email" اكتب {{to_email}} (مش إيميل ثابت)
-//    عشان كل معلم ياخد النتيجة بتاعة مادته على إيميله هو
-// 4) في محتوى القالب استخدم المتغيرات: {{student_name}} {{student_code}} {{student_grade}}
-//    {{student_subject}} {{student_lesson}} {{student_whatsapp}} {{percent}} {{level}}
-//    {{correct_count}} {{total}} {{breakdown}} — ولو عايز صورة الطالب تظهر جوه الإيميل
-//    ضيف تاج: <img src="{{student_photo}}"> جوه تصميم القالب
-// 5) Account > API Keys، هتلاقي Public Key
-// 6) الصق القيم الثلاثة تحت
 const EMAILJS_PUBLIC_KEY  = "YOUR_EMAILJS_PUBLIC_KEY";
 const EMAILJS_SERVICE_ID  = "YOUR_EMAILJS_SERVICE_ID";
 const EMAILJS_TEMPLATE_ID = "YOUR_EMAILJS_TEMPLATE_ID";
 const EMAIL_CONFIGURED = !EMAILJS_PUBLIC_KEY.startsWith("YOUR_");
 
-// إيميل المعلمين بقى بيتضاف من داخل الموقع نفسه (لوحة المعلم ← بريد المعلمين)
-// ومخزّن في Supabase — مفيش حاجة تتظبط هنا في الكود. ده الإيميل الافتراضي
-// المؤقت المستخدم للتجربة لحد ما تضيف إيميلات باقي المعلمين من الموقع.
 const DEFAULT_TEACHER_EMAIL = "adhamk986@gmail.com";
+
+/* ======================= رمز حماية لوحة المعلم =======================
+   غيّر هذا الرمز إلى أي أرقام تريدها. يُطلب مرة واحدة فقط عند فتح
+   "لوحة المعلم" أو "تقارير النتائج" من القائمة العلوية، ولا يُطلب مجددًا
+   حتى تُغلق الصفحة/يُعاد تحميلها. */
+const TEACHER_PIN = "2580";
+let teacherUnlocked = false;
+function checkTeacherPin(){
+  if (teacherUnlocked) return true;
+  const pin = prompt('من فضلك أدخل الرمز السري الخاص بالمعلم:');
+  if (pin === null) return false;
+  if (pin === TEACHER_PIN){ teacherUnlocked = true; return true; }
+  alert('الرمز غير صحيح.');
+  return false;
+}
 
 async function getTeacherEmail(subject, grade){
   try {
     const gradeNorm = (grade || '').trim();
     const { data, error } = await getSb().from('teacher_emails').select('*').ilike('subject', subject);
     if (error || !data || data.length === 0) return DEFAULT_TEACHER_EMAIL;
-    // دوّر على تطابق دقيق للصف (بدون حساسية لحالة الأحرف)
     const exact = data.find(r => (r.grade || '').trim().toUpperCase() === gradeNorm.toUpperCase());
     if (exact) return exact.email;
-    // بعدين دوّر على سطر "كل الصفوف" (الصف فاضي) لنفس المادة
     const fallback = data.find(r => !r.grade || !r.grade.trim());
     if (fallback) return fallback.email;
     return DEFAULT_TEACHER_EMAIL;
@@ -454,12 +453,9 @@ let studentPhoto = null;
 let questions = [];
 let answers = {};
 let lastResult = null;
-let pendingAttachment = null; // {data, name, isImage}
+let pendingAttachment = null;
 let mcqOptionCount = 0;
 
-/* lazy/safe client init — if the CDN library hiccups on load, this never
-   crashes the whole script; the error only surfaces when actually needed,
-   inside a try/catch that already shows a friendly Arabic message */
 let _sb = null;
 function getSb(){
   if (!_sb){
@@ -524,6 +520,7 @@ function previewPhoto(){
 function toggleTeacher(){
   const t = $('screen-teacher');
   if (t.classList.contains('hidden')){
+    if (!checkTeacherPin()) return;
     hide('screen-intake'); hide('screen-quiz'); hide('screen-result'); hide('screen-reports');
     show('screen-teacher');
     $('toggleTeacherBtn').textContent = 'رجوع للاختبار';
@@ -537,6 +534,7 @@ function toggleTeacher(){
     loadIntakeSubjects();
   }
 }
+
 function toggleReports(){
   const r = $('screen-reports');
   if (r.classList.contains('hidden')){
@@ -556,7 +554,7 @@ function restartAll(){
   loadIntakeSubjects();
 }
 
-/* ======================= INTAKE DROPDOWNS (تُملأ من قاعدة البيانات) ======================= */
+/* ======================= INTAKE DROPDOWNS ======================= */
 async function loadIntakeSubjects(){
   const sel = $('in-subject');
   sel.innerHTML = '<option value="">جاري التحميل...</option>';
@@ -638,7 +636,7 @@ async function startQuiz(){
   studentPhoto = null;
   if (photoFile){
     try { studentPhoto = await compressImage(photoFile, 300, 0.6); }
-    catch(e){ /* تجاهل خطأ الصورة، الاختبار يكمل عادي */ }
+    catch(e){ }
   }
 
   $('startBtn').disabled = true;
@@ -813,7 +811,6 @@ async function sendResult(){
         to_email: toEmail,
         subject_line: `نتيجة ${student.name} — ${student.subject}`,
         body_text: fullBody,
-        // أسماء المتغيرات دي مطابقة للقالب الموجود بالفعل في emailjs.com (Contact Us)
         student_name: student.name,
         grade: student.grade,
         subject: student.subject,
@@ -855,7 +852,6 @@ async function sendToParentWhatsapp(){
     return;
   }
   let digits = student.whatsapp.replace(/[^\d]/g, '');
-  // لو الرقم مكتوب من غير مفتاح دولة (أرقام عُمان محلية 8 أرقام، بدون صفر أول عادةً)، نضيف مفتاح عُمان 968
   if (digits.startsWith('0')) digits = digits.slice(1);
   if (!digits.startsWith('968') && digits.length <= 8) digits = '968' + digits;
   let text = `نتيجة ${student.name} في مدرسة الموالح الخاصة\n` +
@@ -877,7 +873,6 @@ async function sendToParentWhatsapp(){
       toggleReports();
       $('rep-code').value = code;
       loadStudentReport();
-      // ده رابط لولي الأمر بس — نخفي روابط لوحة المعلم والتنقل خالص
       hide('topnav');
     } else {
       loadIntakeSubjects();
