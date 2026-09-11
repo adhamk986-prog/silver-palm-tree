@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>كنوز لغتي الجميلة | الصف العاشر</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night-1:#0b1f3a;
+    --night-2:#122c52;
+    --gold:#e0aa3e;
+    --gold-light:#f4d896;
+    --teal:#1c6e63;
+    --teal-light:#2f9c8c;
+    --terracotta:#c1543c;
+    --cream:#f6ead0;
+    --ink:#0b1f3a;
+    --star:#fff2c9;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1px 1px at 10% 20%, #ffffff88 0%, transparent 60%),
+      radial-gradient(1px 1px at 80% 10%, #ffffff66 0%, transparent 60%),
+      radial-gradient(2px 2px at 60% 30%, #ffffffaa 0%, transparent 60%),
+      radial-gradient(1px 1px at 30% 70%, #ffffff77 0%, transparent 60%),
+      radial-gradient(1px 1px at 90% 60%, #ffffff55 0%, transparent 60%),
+      radial-gradient(1px 1px at 45% 85%, #ffffff66 0%, transparent 60%),
+      linear-gradient(180deg, var(--night-1), var(--night-2) 60%, #0e2440);
+    font-family:'Tajawal', sans-serif;
+    color:var(--cream);
+    padding:20px 14px 60px;
+  }
+  .wrap{max-width:920px;margin:0 auto;}
+  header{text-align:center;margin-bottom:18px;}
+  .kicker{
+    font-family:'Reem Kufi', sans-serif;
+    color:var(--gold-light);
+    letter-spacing:.5px;
+    font-size:14px;
+    opacity:.85;
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:'Reem Kufi', sans-serif;
+    font-weight:700;
+    font-size:clamp(28px,7vw,42px);
+    margin:0 0 6px;
+    background:linear-gradient(90deg,var(--gold-light),var(--gold) 50%,#fff4d6);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .sub{color:#cfe0e8;font-size:14.5px;max-width:520px;margin:0 auto;line-height:1.7;}
+
+  .scoreboard{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin:18px 0 22px;
+  }
+  .pill{
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(224,170,62,.35);
+    border-radius:999px;
+    padding:8px 16px;
+    font-size:13.5px;
+    display:flex;
+    align-items:center;
+    gap:7px;
+    backdrop-filter:blur(3px);
+  }
+  .pill b{color:var(--gold-light);font-size:15px;}
+
+  .progress-track{
+    height:8px;border-radius:99px;background:rgba(255,255,255,.08);
+    max-width:520px;margin:0 auto 26px;overflow:hidden;
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--teal-light),var(--gold));transition:width .5s ease;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:10px;
+  }
+  @media(min-width:600px){.grid{grid-template-columns:repeat(8,1fr);gap:12px;}}
+
+  .tile{
+    aspect-ratio:1/1;
+    border-radius:14px;
+    border:1.5px solid rgba(224,170,62,.4);
+    background:linear-gradient(160deg, #16345c, #0e2545);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Reem Kufi',sans-serif;
+    font-size:clamp(16px,4vw,20px);
+    color:var(--gold-light);
+    cursor:pointer;
+    position:relative;
+    transition:transform .15s ease, box-shadow .15s ease, background .3s ease;
+    user-select:none;
+  }
+  .tile:active{transform:scale(.93);}
+  .tile:hover{box-shadow:0 0 0 2px var(--gold), 0 6px 16px rgba(0,0,0,.35);transform:translateY(-2px);}
+  .tile::after{
+    content:'';
+    position:absolute;inset:3px;
+    border-radius:11px;
+    border:1px dashed rgba(255,255,255,.12);
+    pointer-events:none;
+  }
+  .tile.done{
+    background:linear-gradient(160deg, var(--teal), #0e2545);
+    color:#eafff8;
+    border-color:rgba(47,156,140,.6);
+  }
+  .tile.done .badge{
+    position:absolute;bottom:5px;font-size:12px;opacity:.85;
+  }
+
+  /* modal */
+  .overlay{
+    position:fixed;inset:0;background:rgba(6,14,28,.78);
+    display:none;align-items:center;justify-content:center;
+    z-index:50;padding:18px;backdrop-filter:blur(2px);
+  }
+  .overlay.show{display:flex;}
+  .card{
+    width:100%;max-width:440px;
+    background:linear-gradient(165deg,#152f52,#0c2140);
+    border:1.5px solid rgba(224,170,62,.5);
+    border-radius:20px;
+    padding:26px 22px 22px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+    animation:pop .28s cubic-bezier(.2,1.4,.4,1);
+    position:relative;
+    max-height:88vh;
+    overflow-y:auto;
+  }
+  @keyframes pop{from{transform:scale(.8);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .card-num{
+    position:absolute;top:14px;right:16px;
+    font-family:'Reem Kufi',sans-serif;color:rgba(255,255,255,.35);font-size:13px;
+  }
+  .type-label{
+    font-family:'Reem Kufi',sans-serif;
+    font-size:13px;
+    color:var(--gold-light);
+    letter-spacing:.5px;
+    margin-bottom:4px;
+  }
+  .type-emoji{font-size:40px;margin:6px 0 10px;}
+  .topic-tag{
+    display:inline-block;background:rgba(224,170,62,.15);
+    color:var(--gold-light);border:1px solid rgba(224,170,62,.4);
+    border-radius:999px;font-size:12px;padding:3px 12px;margin-bottom:12px;
+  }
+  .question{font-size:17px;line-height:1.8;margin:8px 0 16px;color:#fdf6e3;}
+  .answer-box{
+    background:rgba(47,156,140,.15);border:1px solid rgba(47,156,140,.5);
+    border-radius:12px;padding:14px;margin-top:12px;font-size:15.5px;
+    line-height:1.8;color:#eafff8;display:none;text-align:right;
+  }
+  .answer-box.show{display:block;animation:slidein .25s ease;}
+  @keyframes slidein{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+  .btn{
+    font-family:'Tajawal',sans-serif;font-weight:700;font-size:14.5px;
+    border:none;border-radius:12px;padding:11px 20px;cursor:pointer;
+    margin:6px 5px 0;transition:transform .12s ease, opacity .12s ease;
+  }
+  .btn:active{transform:scale(.95);}
+  .btn-primary{background:linear-gradient(90deg,var(--gold),#c98f2f);color:#22160a;}
+  .btn-good{background:var(--teal-light);color:#06251f;}
+  .btn-meh{background:rgba(255,255,255,.12);color:#f4ead0;border:1px solid rgba(255,255,255,.25);}
+  .btn-close{background:transparent;color:#9fb2c8;text-decoration:underline;font-weight:500;}
+
+  .jump-box{margin:10px 0 6px;}
+  .jump-anim{font-size:52px;display:inline-block;animation:jump 0.9s ease-in-out infinite;}
+  @keyframes jump{0%,100%{transform:translateY(0);}50%{transform:translateY(-22px);}}
+  .jump-text{font-size:16px;line-height:1.8;margin:14px 0 4px;color:#fdf6e3;}
+
+  .surprise-anim{font-size:58px;animation:spin-pop 1s ease;}
+  @keyframes spin-pop{0%{transform:scale(.3) rotate(-30deg);opacity:0;}60%{transform:scale(1.15) rotate(10deg);opacity:1;}100%{transform:scale(1) rotate(0);}}
+  .surprise-text{font-size:16.5px;margin:10px 0 4px;color:#fdf6e3;}
+
+  .confetti{position:fixed;top:-10px;width:8px;height:14px;border-radius:2px;z-index:60;pointer-events:none;}
+
+  footer{text-align:center;margin-top:34px;color:#7d93ad;font-size:12.5px;}
+
+  /* start screen */
+  .start-overlay{
+    position:fixed;inset:0;z-index:80;
+    background:radial-gradient(circle at 50% 20%, #16345c, var(--night-1) 70%);
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .start-card{
+    max-width:420px;width:100%;text-align:center;
+    background:linear-gradient(165deg,#152f52,#0c2140);
+    border:1.5px solid rgba(224,170,62,.5);border-radius:20px;
+    padding:30px 24px;box-shadow:0 20px 60px rgba(0,0,0,.5);
+  }
+  .field-label{display:block;text-align:right;font-size:13px;color:#cfe0e8;margin:14px 0 6px;}
+  .field-input{
+    width:100%;padding:11px 14px;border-radius:10px;border:1px solid rgba(224,170,62,.4);
+    background:rgba(255,255,255,.06);color:var(--cream);font-family:'Tajawal',sans-serif;font-size:15px;
+    text-align:right;
+  }
+  .field-input::placeholder{color:#8fa3ba;}
+
+  /* finish summary */
+  .finish-btn-wrap{text-align:center;margin:0 0 22px;}
+  .stat-row{display:flex;justify-content:space-between;font-size:14.5px;margin:6px 0;padding:0 4px;}
+  .stat-row b{color:var(--gold-light);}
+  .percent-big{
+    font-family:'Reem Kufi',sans-serif;font-size:46px;color:var(--gold-light);margin:6px 0 2px;
+  }
+  .send-status{font-size:13px;margin-top:10px;min-height:18px;color:#cfe0e8;}
+</style>
+</head>
+<body>
+
+<div class="start-overlay" id="startOverlay">
+  <div class="start-card">
+    <div class="kicker">لغتي الجميلة — الصف العاشر</div>
+    <h1 style="font-size:28px;">كنوز الدروس الخمسون</h1>
+    <p class="sub">قبل البدء، اكتب اسمك حتى يتمكن معلمك من معرفة نتيجتك بعد انتهاء اللعبة.</p>
+    <label class="field-label">اسم الطالب</label>
+    <input type="text" id="studentNameInput" class="field-input" placeholder="اكتب اسمك هنا...">
+    <div style="margin-top:20px;">
+      <button class="btn btn-primary" id="startBtn" style="width:100%;">ابدأ اللعبة 🚀</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">لغتي الجميلة — الصف العاشر</div>
+    <h1>كنوز الدروس الخمسون</h1>
+    <p class="sub">اختر أي رقم من الخريطة لتكتشف مفاجأتك: سؤال تخمين، تحدي قفز، أو نجمة حظ! اجمع أكبر عدد من النقاط والنجوم.</p>
+  </header>
+
+  <div class="scoreboard">
+    <div class="pill">👤 <b id="playerName">—</b></div>
+    <div class="pill">⭐ النجوم: <b id="starCount">0</b></div>
+    <div class="pill">🏆 النقاط: <b id="pointCount">0</b></div>
+    <div class="pill">🗺️ فُتح: <b id="openCount">0</b>/50</div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="finish-btn-wrap">
+    <button class="btn btn-primary" id="finishBtn">📊 إنهاء اللعبة وعرض النتيجة</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>محور اللغة العربية · مبني على وحدات لغتي الجميلة للصف العاشر</footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="card" id="card"></div>
+</div>
+
+<script>
+/* ============ DATA ============ */
+// 50 theoretical review items drawn from grammar, rhetoric, literary criticism,
+// morphology, and text-comprehension units of the Grade 10 Arabic course.
+const QUESTIONS = [
+  {t:"النحو", q:"عرّف «الحال» في اللغة العربية.", a:"اسم نكرة منصوب يبيّن هيئة صاحبه (الفاعل أو المفعول به أو غيرهما) عند وقوع الفعل."},
+  {t:"النحو", q:"ما حكم إعراب الحال في الغالب؟", a:"منصوبة دائمًا."},
+  {t:"النحو", q:"«عاد الطالبُ مسرعًا» — ما نوع الحال هنا؟", a:"حال مفردة (كلمة واحدة وليست جملة)."},
+  {t:"النحو", q:"الحال الجملة تأتي على نوعين، اذكرهما.", a:"جملة فعلية، وجملة اسمية."},
+  {t:"النحو", q:"من أين تتكوّن «الحال شبه الجملة»؟", a:"من جار ومجرور، أو ظرف."},
+  {t:"النحو", q:"اذكر شرطًا أساسيًا في صاحب الحال.", a:"أن يكون معرفة في الغالب (اسمًا معروفًا محددًا)."},
+  {t:"النحو", q:"«جاء الجنودُ منتصرين» — ما صاحب الحال؟", a:"الجنود."},
+  {t:"النحو", q:"عرّف «تمييز الذات».", a:"اسم نكرة منصوب يوضح المقصود من اسم مبهم قبله (كالأعداد والمقادير)."},
+  {t:"النحو", q:"عرّف «تمييز النسبة».", a:"اسم نكرة منصوب يوضح نسبة غامضة بين شيئين في جملة تامة المعنى."},
+  {t:"النحو", q:"«اشتريت عشرين كتابًا» — أعرب كلمة «كتابًا».", a:"تمييز منصوب وعلامة نصبه الفتحة."},
+  {t:"النحو", q:"«طاب محمدٌ نفسًا» — ما نوع التمييز في «نفسًا»؟", a:"تمييز نسبة (نسبة الطيب إلى النفس)."},
+  {t:"النحو", q:"كيف يُعرب المعدود مع الأعداد من 3 إلى 10؟", a:"يكون جمعًا مجرورًا بالإضافة."},
+  {t:"النحو", q:"كيف يوافق العددان (1) و(2) المعدود؟", a:"يطابقانه في التذكير والتأنيث."},
+  {t:"النحو", q:"ما حكم المعدود مع الأعداد المركبة من 11 إلى 19؟", a:"يكون مفردًا منصوبًا على التمييز."},
+  {t:"النحو", q:"ما حكم المعدود مع «مئة» و«ألف»؟", a:"يكون مفردًا مجرورًا بالإضافة."},
+  {t:"النحو", q:"في العدد المركب (مثل أحد عشر)، كيف يوافق الجزء الأول المعدود؟", a:"يطابقه في التذكير والتأنيث، بينما «عشر» يخالفه."},
+  {t:"البلاغة", q:"عرّف علم البلاغة.", a:"علم يُعنى بمطابقة الكلام لمقتضى الحال مع فصاحته وجماله."},
+  {t:"البلاغة", q:"اذكر أقسام علم البلاغة الثلاثة.", a:"علم المعاني، وعلم البيان، وعلم البديع."},
+  {t:"البلاغة", q:"عرّف «السجع».", a:"توافق الفاصلتين في النثر على حرف واحد في آخرهما."},
+  {t:"البلاغة", q:"أعط مثالًا من إنشائك على السجع.", a:"مثال مقبول: «من جدّ وجد، ومن زرع حصد» (أي جملتين تنتهيان بنفس الحرف)."},
+  {t:"البلاغة", q:"عرّف «الجناس».", a:"تشابه لفظين في النطق واختلافهما في المعنى."},
+  {t:"البلاغة", q:"ما نوعا الجناس؟", a:"جناس تام، وجناس ناقص."},
+  {t:"البلاغة", q:"ما الفرق بين الجناس التام والناقص؟", a:"التام يتفق فيه اللفظان في كل الحروف ونوعها وترتيبها وعددها، والناقص يختلفان في واحد من ذلك."},
+  {t:"النقد الأدبي", q:"عرّف النقد الأدبي.", a:"دراسة الأثر الأدبي وتحليله وبيان قيمته الفنية والفكرية."},
+  {t:"النقد الأدبي", q:"ما وظيفة الناقد الأدبي؟", a:"تحليل العمل الأدبي وتقييمه وكشف جمالياته وأوجه القصور فيه."},
+  {t:"النقد الأدبي", q:"اذكر عنصرًا من عناصر العمل الأدبي.", a:"من عناصره: الفكرة، والعاطفة، والأسلوب، والصورة الفنية."},
+  {t:"النقد الأدبي", q:"عرّف «العاطفة» كعنصر من عناصر العمل الأدبي.", a:"الانفعال الوجداني الصادق الذي يعبّر عنه الأديب في نصه."},
+  {t:"النقد الأدبي", q:"لماذا تُعد «الفكرة» من أهم عناصر العمل الأدبي؟", a:"لأنها المضمون الذي يقوم عليه النص وتدور حوله بقية العناصر."},
+  {t:"الصرف واللغة", q:"ما هو «الاسم المقصور»؟", a:"اسم معرب آخره ألف لازمة قبلها فتحة، مثل: الهدى، مصطفى."},
+  {t:"الصرف واللغة", q:"كيف يُثنّى الاسم المقصور؟", a:"تُقلب ألفه ياءً إن كانت أصلها ياء، أو واوًا إن كانت أصلها واوًا، ثم تضاف علامة التثنية."},
+  {t:"الصرف واللغة", q:"كيف يُجمع الاسم المقصور جمع مذكر سالمًا؟", a:"تُحذف ألفه ثم تضاف واو ونون رفعًا، أو ياء ونون نصبًا وجرًا."},
+  {t:"الصرف واللغة", q:"ما وظيفة المعجم اللغوي؟", a:"بيان معاني الكلمات وأصولها واستعمالاتها الصحيحة."},
+  {t:"الصرف واللغة", q:"كيف نبحث عن كلمة في المعجم العربي التقليدي؟", a:"نردّها إلى جذرها الثلاثي أو الرباعي ثم نبحث تحت هذا الجذر."},
+  {t:"مراجعة عامة", q:"اذكر أحد أنواع «الخبر» في فن الكتابة الصحفية.", a:"الخبر الصحفي، وهو نص يقدّم معلومة أو حدثًا بأسلوب موجز وواضح."},
+  {t:"مراجعة عامة", q:"ما الهدف من مهارة «التلخيص»؟", a:"اختصار النص إلى أفكاره الأساسية مع الحفاظ على المعنى العام بأسلوب المُلخِّص."},
+  {t:"مراجعة عامة", q:"اذكر عنصرًا لا بد منه في «محضر الاجتماعات».", a:"من عناصره: التاريخ، الحضور، جدول الأعمال، القرارات المتخذة."},
+  {t:"مراجعة عامة", q:"عرّف «الوصف» كأسلوب تعبيري.", a:"نقل صورة الشيء أو المشهد بالكلمات نقلًا دقيقًا يثير الحواس والخيال."},
+  {t:"مراجعة عامة", q:"ما الفرق بين «المذكرات اليومية» والتقرير؟", a:"المذكرات تعبير شخصي حر عن يوميات الكاتب، بينما التقرير عرض موضوعي منظم لحدث أو موضوع."},
+  {t:"مراجعة عامة", q:"اذكر فائدة واحدة من «قراءة الصور والرسوم».", a:"تنمية مهارة الملاحظة والتحليل البصري وربط الصورة بالمعنى المكتوب."},
+  {t:"مراجعة عامة", q:"اذكر عنصرين من عناصر الخطاب الجيد.", a:"وضوح الفكرة، وترابط الأفكار (ويمكن إضافة: سلامة اللغة وقوة الإقناع)."},
+  {t:"نصوص وقراءة", q:"بمَ يوحي عنوان نص «في الحنين إلى عمان»؟", a:"يوحي بمشاعر الشوق والانتماء إلى الوطن."},
+  {t:"نصوص وقراءة", q:"ما الموضوع العام لنص «أغنية الخليج»؟", a:"الاعتزاز بالانتماء إلى منطقة الخليج العربي وتاريخها وقيمها."},
+  {t:"نصوص وقراءة", q:"ما الفكرة التي يوحي بها عنوان نص «الصرح»؟", a:"البناء والإنجاز الشامخ الذي يرمز إلى قوة الأمة وتماسكها."},
+  {t:"نصوص وقراءة", q:"بمَ يوحي عنوان «فجر السلام»؟", a:"ببدايات الأمل والسلام بعد مرحلة من الصعوبات."},
+  {t:"نصوص وقراءة", q:"ما الموضوع الذي يناقشه نص «الملكية الفكرية»؟", a:"حقوق المبدعين والمؤلفين في حماية إنتاجهم الفكري والأدبي."},
+  {t:"نصوص وقراءة", q:"ما أبرز فكرة يطرحها نص «التجارة الإلكترونية»؟", a:"التحول في أساليب البيع والشراء عبر الوسائل الرقمية وأثره في الاقتصاد."},
+  {t:"نصوص وقراءة", q:"عمّ يتحدث نص «بين الأخلاق والطب»؟", a:"العلاقة بين القيم الأخلاقية وممارسة المهنة الطبية."},
+  {t:"نصوص وقراءة", q:"ما محور نص «عمان كما رآها الرحالة الأوروبيون»؟", a:"انطباعات الرحالة الأوروبيين وشهاداتهم عن عمان وحضارتها."},
+  {t:"نصوص وقراءة", q:"ما رسالة نص «رسالة إلى ابني»؟", a:"نصائح تربوية وقيمية موجهة من جيل إلى جيل."},
+  {t:"مراجعة عامة", q:"لماذا تُعد المراجعة النحوية العامة مهمة قبل أي اختبار؟", a:"لأنها تثبّت القواعد وتكشف نقاط الضعف قبل التقييم الفعلي."}
+];
+
+const JUMPS = [
+  "اقفز 5 قفزات وأنت تُعرب كلمة «الحال» بصوتٍ عالٍ!",
+  "اقفز 3 مرات ثم اذكر مثالًا واحدًا على «الجناس»!",
+  "قفزة واحدة لكل حرف في كلمة «تمييز» — اقفزها كاملة!",
+  "اقفز وأنت تُكرر: «السجع جميل، والبلاغة سحر حلال»!",
+  "اقفز 4 قفزات، ثم اذكر عنصرًا واحدًا من عناصر العمل الأدبي!",
+  "قف وقفز 6 مرات، ثم عدّ من واحد إلى عشرة بصوت عالٍ (تدريب على أحكام العدد)!",
+  "اقفز وأنت تصفّق، ثم اذكر اسم أي نص أدبي درسته هذا الفصل!",
+  "قفزتان لليمين، وقفزتان لليسار، ثم عرّف «الحال» في جملة واحدة!",
+  "اقفز حتى تصل إلى 10، ثم اذكر مثالًا على المعدود المجرور!",
+  "قفزة كبيرة إلى الأعلى وأنت تصرخ: «أنا بطل اللغة العربية!»"
+];
+
+const SURPRISES = [
+  {emoji:"🌟", text:"نجمة ذهبية! أضيفت نجمة إلى رصيدك."},
+  {emoji:"🪙", text:"كنز! اكسب نقطتين إضافيتين فورًا."},
+  {emoji:"🎉", text:"مفاجأة سعيدة! استمر، أنت تبلي بلاءً رائعًا."},
+  {emoji:"💎", text:"جوهرة نادرة! نقطة إضافية بلا أي سؤال."},
+  {emoji:"🏅", text:"وسام تميّز! نجمة مجانية لك."},
+  {emoji:"✨", text:"غبار سحري! نقطة إضافية وتشجيع كبير."}
+];
+
+/* ============ EMAIL CONFIG ============ */
+// Reuses the same EmailJS account/template already configured for the
+// "قيّم نفسك بنفسك" quiz site — sends a one-off result email per student.
+const EMAILJS_SERVICE_ID  = "service_hf5e4i2";
+const EMAILJS_TEMPLATE_ID = "template_y23rpya";
+const EMAILJS_PUBLIC_KEY  = "CY0DMJnP6_riOqljt";
+const DEFAULT_TEACHER_EMAIL = "adhamk986@gmail.com";
+
+/* ============ STATE ============ */
+const state = {
+  studentName: "",
+  stars: 0,
+  points: 0,
+  opened: 0,
+  quizTotal: 0,
+  quizCorrect: 0,
+  tiles: {} // id -> {type, payload, done}
+};
+
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function assignType(id){
+  const r = Math.random();
+  if (r < 0.5) return {type:'quiz', payload: QUESTIONS[(id-1) % QUESTIONS.length]};
+  if (r < 0.75) return {type:'jump', payload: pick(JUMPS)};
+  return {type:'surprise', payload: pick(SURPRISES)};
+}
+
+/* ============ RENDER GRID ============ */
+const grid = document.getElementById('grid');
+for(let i=1;i<=50;i++){
+  const tile = document.createElement('div');
+  tile.className = 'tile';
+  tile.id = 'tile-'+i;
+  tile.innerHTML = i;
+  tile.addEventListener('click', ()=>openTile(i));
+  grid.appendChild(tile);
+}
+
+function updateScoreboard(){
+  document.getElementById('starCount').textContent = state.stars;
+  document.getElementById('pointCount').textContent = state.points;
+  document.getElementById('openCount').textContent = state.opened;
+  document.getElementById('progressFill').style.width = (state.opened/50*100)+'%';
+}
+
+/* ============ MODAL LOGIC ============ */
+const overlay = document.getElementById('overlay');
+const card = document.getElementById('card');
+
+function closeModal(){
+  overlay.classList.remove('show');
+}
+overlay.addEventListener('click', (e)=>{ if(e.target===overlay) closeModal(); });
+
+function markDone(id){
+  const el = document.getElementById('tile-'+id);
+  if(!el.classList.contains('done')){
+    el.classList.add('done');
+    state.opened++;
+    updateScoreboard();
+  }
+}
+
+function openTile(id){
+  if(!state.tiles[id]) state.tiles[id] = assignType(id);
+  const data = state.tiles[id];
+  renderCard(id, data);
+  overlay.classList.add('show');
+}
+
+function renderCard(id, data){
+  if(data.type === 'quiz'){
+    const q = data.payload;
+    card.innerHTML = `
+      <div class="card-num">#${id}</div>
+      <div class="type-label">🔮 خمّن الإجابة</div>
+      <div class="type-emoji">🤔</div>
+      <div class="topic-tag">${q.t}</div>
+      <div class="question">${q.q}</div>
+      <div class="answer-box" id="ansBox">${q.a}</div>
+      <div id="quizBtns">
+        <button class="btn btn-primary" id="revealBtn">إظهار الإجابة</button>
+      </div>
+      <div id="postAnswer" style="display:none;">
+        <button class="btn btn-good" id="gotItBtn">أجبت صح! ✅</button>
+        <button class="btn btn-meh" id="reviewBtn">أحتاج مراجعة 📖</button>
+      </div>
+      <div><button class="btn btn-close" id="closeBtn">إغلاق</button></div>
+    `;
+    document.getElementById('revealBtn').onclick = ()=>{
+      document.getElementById('ansBox').classList.add('show');
+      document.getElementById('quizBtns').style.display='none';
+      document.getElementById('postAnswer').style.display='block';
+    };
+    document.getElementById('gotItBtn').onclick = ()=>{
+      state.points += 2; state.quizTotal++; state.quizCorrect++;
+      markDone(id); updateScoreboard(); closeModal();
+    };
+    document.getElementById('reviewBtn').onclick = ()=>{
+      state.points += 1; state.quizTotal++;
+      markDone(id); updateScoreboard(); closeModal();
+    };
+    document.getElementById('closeBtn').onclick = closeModal;
+
+  } else if(data.type === 'jump'){
+    card.innerHTML = `
+      <div class="card-num">#${id}</div>
+      <div class="type-label">🤸 تحدي القفز</div>
+      <div class="jump-box"><span class="jump-anim">🤸‍♂️</span></div>
+      <div class="jump-text">${data.payload}</div>
+      <button class="btn btn-good" id="doneJumpBtn">أنجزت التحدي! 💪</button>
+      <div><button class="btn btn-close" id="closeBtn">إغلاق</button></div>
+    `;
+    document.getElementById('doneJumpBtn').onclick = ()=>{
+      state.points += 2; markDone(id); updateScoreboard(); closeModal(); burstConfetti();
+    };
+    document.getElementById('closeBtn').onclick = closeModal;
+
+  } else { // surprise
+    const s = data.payload;
+    card.innerHTML = `
+      <div class="card-num">#${id}</div>
+      <div class="type-label">🎁 مفاجأة</div>
+      <div class="surprise-anim">${s.emoji}</div>
+      <div class="surprise-text">${s.text}</div>
+      <button class="btn btn-primary" id="collectBtn">اجمع المكافأة</button>
+    `;
+    document.getElementById('collectBtn').onclick = ()=>{
+      if(s.emoji === '🌟' || s.emoji === '🏅') state.stars += 1;
+      else state.points += 2;
+      markDone(id); updateScoreboard(); closeModal(); burstConfetti();
+    };
+  }
+}
+
+/* ============ CONFETTI ============ */
+function burstConfetti(){
+  const colors = ['#e0aa3e','#2f9c8c','#c1543c','#f4d896','#ffffff'];
+  for(let i=0;i<26;i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = (Math.random()*100)+'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(c);
+    const duration = 1400 + Math.random()*900;
+    c.animate([
+      {transform:`translateY(0) rotate(0deg)`, opacity:1},
+      {transform:`translateY(100vh) rotate(${360+Math.random()*360}deg)`, opacity:.9}
+    ], {duration, easing:'ease-in'});
+    setTimeout(()=>c.remove(), duration+50);
+  }
+}
+
+updateScoreboard();
+
+/* ============ START SCREEN ============ */
+document.getElementById('startBtn').addEventListener('click', beginGame);
+document.getElementById('studentNameInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') beginGame();
+});
+function beginGame(){
+  const input = document.getElementById('studentNameInput');
+  const name = input.value.trim();
+  if(!name){
+    input.style.borderColor = '#c1543c';
+    input.placeholder = 'الرجاء كتابة اسمك أولًا...';
+    return;
+  }
+  state.studentName = name;
+  document.getElementById('playerName').textContent = name;
+  document.getElementById('startOverlay').style.display = 'none';
+}
+
+/* ============ FINISH / RESULT ============ */
+function levelFor(percent){
+  if(percent >= 90) return 'ممتاز';
+  if(percent >= 75) return 'جيد جدًا';
+  if(percent >= 60) return 'جيد';
+  return 'يحتاج مراجعة';
+}
+
+document.getElementById('finishBtn').addEventListener('click', showFinishModal);
+
+function showFinishModal(){
+  const percent = state.quizTotal ? Math.round((state.quizCorrect/state.quizTotal)*100) : 0;
+  const level = state.quizTotal ? levelFor(percent) : '—';
+  card.innerHTML = `
+    <div class="type-label">📊 نتيجتك</div>
+    <div class="type-emoji">🏁</div>
+    <div class="question" style="margin-bottom:2px;">${state.studentName || 'الطالب'}</div>
+    <div class="percent-big">${state.quizTotal ? percent+'%' : '—'}</div>
+    <div style="color:#cfe0e8;font-size:13.5px;margin-bottom:14px;">${state.quizTotal ? level : 'لم تُجب عن أي سؤال بعد'}</div>
+    <div class="stat-row"><span>الأسئلة المُجابة</span><b>${state.quizTotal} / 50 بطاقة</b></div>
+    <div class="stat-row"><span>الإجابات الصحيحة (ذاتيًا)</span><b>${state.quizCorrect}</b></div>
+    <div class="stat-row"><span>النقاط</span><b>${state.points}</b></div>
+    <div class="stat-row"><span>النجوم</span><b>${state.stars} ⭐</b></div>
+    <label class="field-label">بريد المعلم لإرسال النتيجة</label>
+    <input type="email" id="teacherEmailInput" class="field-input" value="${DEFAULT_TEACHER_EMAIL}">
+    <div style="margin-top:16px;">
+      <button class="btn btn-primary" id="sendResultBtn">✉️ إرسال النتيجة للمعلم</button>
+    </div>
+    <div class="send-status" id="sendStatus"></div>
+    <div><button class="btn btn-close" id="closeBtn">إغلاق</button></div>
+  `;
+  document.getElementById('closeBtn').onclick = closeModal;
+  document.getElementById('sendResultBtn').onclick = sendResultEmail;
+  overlay.classList.add('show');
+}
+
+function sendResultEmail(){
+  const statusEl = document.getElementById('sendStatus');
+  const teacherEmail = document.getElementById('teacherEmailInput').value.trim();
+  if(!teacherEmail){ statusEl.textContent = 'الرجاء كتابة بريد إلكتروني صحيح.'; statusEl.style.color = '#e0847a'; return; }
+
+  const percent = state.quizTotal ? Math.round((state.quizCorrect/state.quizTotal)*100) : 0;
+  const level = state.quizTotal ? levelFor(percent) : 'لم يُجب بعد';
+  const btn = document.getElementById('sendResultBtn');
+  btn.disabled = true; btn.textContent = 'جارٍ الإرسال...';
+  statusEl.style.color = '#cfe0e8';
+  statusEl.textContent = '';
+
+  const templateParams = {
+    to_email: teacherEmail,
+    subject_line: `نتيجة لعبة كنوز الدروس الخمسون — ${state.studentName}`,
+    body_text: `الطالب: ${state.studentName}\nالنسبة: ${percent}% (${state.quizCorrect} من ${state.quizTotal} بطاقة أسئلة)\nالمستوى: ${level}\nالنقاط الكلية: ${state.points} | النجوم: ${state.stars}\nالبطاقات المفتوحة: ${state.opened} من 50`,
+    student_name: state.studentName,
+    grade: "الصف العاشر",
+    subject: "اللغة العربية",
+    lesson: "لعبة كنوز الدروس الخمسون",
+    score: `${state.quizCorrect}/${state.quizTotal}`,
+    percent: percent + '%',
+    level: level,
+    details: `النقاط: ${state.points} | النجوم: ${state.stars} | البطاقات المفتوحة: ${state.opened}/50`
+  };
+
+  fetch('https://api.emailjs.com/api/v1.0/email/send', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      service_id: EMAILJS_SERVICE_ID,
+      template_id: EMAILJS_TEMPLATE_ID,
+      user_id: EMAILJS_PUBLIC_KEY,
+      template_params: templateParams
+    })
+  }).then(res=>{
+    btn.disabled = false; btn.textContent = '✉️ إرسال النتيجة للمعلم';
+    if(res.ok){
+      statusEl.style.color = '#7fe0c4';
+      statusEl.textContent = 'تم إرسال النتيجة إلى المعلم بنجاح ✅';
+    } else {
+      statusEl.style.color = '#e0847a';
+      statusEl.textContent = 'تعذّر الإرسال، تأكد من اتصال الإنترنت وحاول مجددًا.';
+    }
+  }).catch(()=>{
+    btn.disabled = false; btn.textContent = '✉️ إرسال النتيجة للمعلم';
+    statusEl.style.color = '#e0847a';
+    statusEl.textContent = 'تعذّر الإرسال، تأكد من اتصال الإنترنت وحاول مجددًا.';
+  });
+}
+</script>
+</body>
+</html>
