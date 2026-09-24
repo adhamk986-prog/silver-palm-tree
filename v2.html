@@ -530,15 +530,20 @@ async function toggleTeacher(){
   }
 }
 
-function toggleReports(){
+async function toggleReports(){
   const r = $('screen-reports');
   if (r.classList.contains('hidden')){
-    hide('screen-intake'); hide('screen-quiz'); hide('screen-result'); hide('screen-teacher');
-    show('screen-reports');
+    const ok = await checkTeacherPin();
+    if (!ok) return;
+    showReportsScreenRaw();
   } else {
     hide('screen-reports');
     show('screen-intake');
   }
+}
+function showReportsScreenRaw(){
+  hide('screen-intake'); hide('screen-quiz'); hide('screen-result'); hide('screen-teacher');
+  show('screen-reports');
 }
 function backToIntake(){ hide('screen-quiz'); show('screen-intake'); }
 function restartAll(){
@@ -891,7 +896,7 @@ async function sendToParentWhatsapp(){
   const code = params.get('code');
   window.addEventListener('DOMContentLoaded', () => {
     if (code){
-      toggleReports();
+      showReportsScreenRaw();
       $('rep-code').value = code;
       loadStudentReport();
       hide('topnav');
